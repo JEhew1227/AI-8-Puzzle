@@ -27,7 +27,7 @@ export default class BreadthFirst {
         newState = this.go(state, position2, step);
         if (!this.compare(newState, state.prev)) {
             state2 = this.hashState(newState);
-            if (typeof this.hash[state2] == 'undefined\\') {
+            if (typeof this.hash[state2] == 'undefined') {
                 this.hash[state2] = newState;
                 newState.prev = state;
                 successors.push(newState);
