@@ -1,5 +1,6 @@
-import { testStates,resetTiles } from './puzzle.js';
+import { testStates,resetTiles , goalState} from './puzzle.js';
 import BreadthFirst from './breadth-first.js';
+import IterativeDeepening from './iterative-deepening.js';
 import PuzzleAnimator from './animation.js';
 
 //console.log(new BreadthFirst().time(testStates[0]))
@@ -32,15 +33,15 @@ document.querySelectorAll('.state-control').forEach(btn => {
         animator.newPuzzle(newState);
     });
 });
-
-const paths = new BreadthFirst().time(testStates[0]);
-console.log(paths);
-paths.forEach((path,i) => {
-    console.log(path);
-    setTimeout(() => {
-        resetTiles(path)
-    }, i*500);
-});
+IterativeDeepening.depthFirstSearch(testStates[0], goalState)
+// const paths = new BreadthFirst().time(testStates[0]);
+// console.log(paths);
+// paths.forEach((path,i) => {
+//     console.log(path);
+//     setTimeout(() => {
+//         resetTiles(path)
+//     }, i*500);
+// });
 
 // console.time('Breadth First Search');
 // testStates.forEach((puzz, i) => {
