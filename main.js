@@ -33,7 +33,8 @@ document.querySelectorAll('.state-control').forEach(btn => {
         animator.newPuzzle(newState);
     });
 });
-IterativeDeepening.depthFirstSearch(testStates[0], goalState)
+const solution = IterativeDeepening.search([1,2,0,4,5,3,7,8,6], goalState);
+console.log(solution);
 // const paths = new BreadthFirst().time(testStates[0]);
 // console.log(paths);
 // paths.forEach((path,i) => {

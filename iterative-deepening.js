@@ -1,12 +1,28 @@
 export default class IterativeDeepening {
-    static depthFirstSearch(root, goal, current = null, visited = []) {
+    static search(root, goal){
+        let limit = 0;
+        let result = IterativeDeepening.depthFirstSearch(root, goal, limit + 1);
+        while(!result){
+            ++limit;
+            result = IterativeDeepening.depthFirstSearch(root, goal, limit + 1);
+        }
+        return result;
+    }
+
+    static depthFirstSearch(root, goal, limit, current = null, visited = []) {
         if (visited.length === 0) {
             visited.push(root);
         }
 
         if (!current) {
             current = root;
+            current.step = 0;
             current.prev = null;
+            current.isRoot = true;
+        }
+
+        if(current.step > limit){
+            return IterativeDeepening.depthFirstSearch(root, goal, limit, current.prev, visited);
         }
 
         if (IterativeDeepening.isEqual(current.data, goal)) {
@@ -14,21 +30,42 @@ export default class IterativeDeepening {
         }
 
         const successors = IterativeDeepening.getSuccessors({data: current});
-        console.log(current);
-        console.log(successors);
-        return
+        const lastSuccessor = successors.at(-1);
+        if (IterativeDeepening.isVisited(lastSuccessor.data, visited)){
+            return current.isRoot ?null: IterativeDeepening.depthFirstSearch(root, goal, limit, current.prev, visited);
+        }
         for (let i = 0; i < successors.length; ++i) {
             const successor = successors[i];
-            // if (!) {
-            //     visited.push(successor);
+            if (!IterativeDeepening.isVisited(successor.data, visited)) {
+                visited.push(successor);
 
-            //     successor.prev = current
-            //     return IterativeDeepening.depthFirstSearch(root, goal, successor, visited);
-            // }
+                successor.prev = current
+                return IterativeDeepening.depthFirstSearch(root, goal, limit, successor, visited);
+            }
         }
 
         // go backwards
-        return IterativeDeepening.depthFirstSearch(root, goal, current.prev, visited);
+        return IterativeDeepening.depthFirstSearch(root, goal, limit, current.prev, visited);
+    }
+
+    static isVisited(node, visited){
+        for(let i = 0; i < visited.length; i++){
+            if(IterativeDeepening.isEqual(node, visited[i])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static constructPath(node){
+        const path = []; 
+        let current = node;
+        while (current.prev != null){
+            path.push(current.data);
+            current =  current.prev;
+        }
+        path.push(current.data);
+        return path.reverse();
     }
 
     static isEqual(arr1, arr2) {
